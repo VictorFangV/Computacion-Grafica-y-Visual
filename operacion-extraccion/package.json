@@ -1,0 +1,17 @@
+{
+  "name": "operacion-extraccion",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Operación Extracción - FPS 3D en Three.js (UPN, Computación Gráfica y Visual, T3)",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "models": "node tools/make-models.mjs"
+  },
+  "dependencies": {
+    "three": "^0.187.0",
+    "vite": "^8.3.8"
+  }
+}

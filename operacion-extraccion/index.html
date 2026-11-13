@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Operación Extracción</title>
+  <link rel="icon" href="data:," />
+  <style>
+    :root { --green: #8dff6a; --red: #ff3b30; --dim: #9aa58f; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #050805; color: #e6efd9;
+      font-family: "Courier New", ui-monospace, monospace; user-select: none; }
+    canvas { display: block; width: 100vw; height: 100vh; }
+
+    #hud { position: fixed; inset: 0; pointer-events: none; }
+    .hidden { display: none !important; }
+
+    #crosshair { position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; transform: translate(-50%, -50%); }
+    #crosshair::before, #crosshair::after { content: ""; position: absolute; background: var(--green); opacity: .9; }
+    #crosshair::before { left: 10px; top: 0; width: 2px; height: 22px; }
+    #crosshair::after { top: 10px; left: 0; height: 2px; width: 22px; }
+    #crosshair.hit::before, #crosshair.hit::after { background: var(--red); }
+    #crosshair .gap { position: absolute; left: 7px; top: 7px; width: 8px; height: 8px; background: rgba(0,0,0,.65); z-index: 1; }
+
+    #status { position: absolute; top: 16px; left: 18px; font-size: 15px; line-height: 1.6; text-shadow: 0 0 6px #000; }
+    #objective { position: absolute; top: 16px; right: 18px; text-align: right; font-size: 15px; text-shadow: 0 0 6px #000; color: var(--green); }
+
+    #weapons { position: absolute; left: 18px; bottom: 18px; display: flex; gap: 10px; }
+    .slot { min-width: 190px; padding: 10px 14px; border: 2px solid rgba(141,255,106,.25); background: rgba(0,0,0,.55);
+      display: flex; align-items: baseline; gap: 10px; opacity: .6; }
+    .slot.active { border-color: var(--green); opacity: 1; box-shadow: 0 0 14px rgba(141,255,106,.35); }
+    .slot .key { font-weight: bold; color: var(--green); }
+    .slot .wname { flex: 1; font-size: 14px; letter-spacing: 1px; }
+    .slot .wammo { font-size: 30px; font-weight: bold; }
+    .slot .wammo.empty { color: var(--red); }
+
+    #toast { position: absolute; left: 50%; bottom: 22%; transform: translateX(-50%); font-size: 22px; font-weight: bold;
+      letter-spacing: 2px; text-shadow: 0 0 8px #000; opacity: 0; transition: opacity .25s; text-align: center; }
+    #toast.show { opacity: 1; }
+
+    #damage { position: absolute; inset: 0; box-shadow: inset 0 0 180px rgba(0,0,0,.85); }
+
+    #overlay { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 14px; background: rgba(3,6,3,.88); text-align: center; padding: 24px; cursor: pointer; }
+    #overlay h1 { margin: 0; font-size: clamp(32px, 6vw, 72px); letter-spacing: 6px; color: var(--green); text-shadow: 0 0 22px rgba(141,255,106,.45); }
+    #overlay.gameover h1 { color: var(--red); text-shadow: 0 0 26px rgba(255,59,48,.6); }
+    #overlay p { margin: 0; max-width: 640px; color: #cfd9c3; line-height: 1.5; }
+    #ovHint { color: var(--green); font-weight: bold; animation: blink 1.2s infinite; }
+    @keyframes blink { 50% { opacity: .35; } }
+    #controls { display: grid; grid-template-columns: auto auto; gap: 4px 22px; font-size: 14px; color: var(--dim); text-align: left; margin-top: 6px; }
+    #controls b { color: #e6efd9; }
+  </style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+
+  <div id="hud" class="hidden">
+    <div id="damage"></div>
+    <div id="crosshair"><div class="gap"></div></div>
+    <div id="status"><div id="zombiesInfo"></div></div>
+    <div id="objective"><div>OBJETIVO: llega a la zona de extracción</div><div id="extractInfo"></div></div>
+    <div id="weapons">
+      <div class="slot" id="slot0"><span class="key">1</span><span class="wname"></span><span class="wammo"></span></div>
+      <div class="slot" id="slot1"><span class="key">2</span><span class="wname"></span><span class="wammo"></span></div>
+    </div>
+    <div id="toast"></div>
+  </div>
+
+  <div id="overlay">
+    <h1 id="ovTitle">OPERACIÓN EXTRACCIÓN</h1>
+    <p id="ovText"></p>
+    <div id="controls">
+      <b>W A S D</b><span>moverse</span>
+      <b>Mouse</b><span>orientar la cámara</span>
+      <b>Clic izquierdo</b><span>disparar (un disparo por clic)</span>
+      <b>1 / 2</b><span>cambiar de arma</span>
+      <b>Esc</b><span>pausa</span>
+    </div>
+    <div id="ovHint">Cargando modelos…</div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
